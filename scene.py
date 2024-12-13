@@ -2,6 +2,9 @@ class Scene:
     def __init__(self):
         pass
 
+    def initialize(self):
+        pass
+
     def handle_event(self, event):
         pass
 

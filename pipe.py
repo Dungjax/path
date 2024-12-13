@@ -1,5 +1,4 @@
 from pygame import Surface, mouse, MOUSEBUTTONDOWN
-from node import Node
 from common import WINDOW, TILE_SIZE, grid, toWorldPoint, directions_match, GRID_SIZE, directions_by_name
 from assets import pipe_sprites, start_pipe_sprites, end_pipe_sprites
 
@@ -45,6 +44,16 @@ class Pipe:
                 if next_pipe:
                     if self.end_direction == directions_match.get(next_pipe.start_direction):
                         next_pipe.isAnimate = True
+                else:
+                    for pipe in list(pipes.values()):
+                        if pipe.isAnimate == False:
+                            return False
+                    end_next_position = (
+                        end_pipe.position[0] + directions_by_name.get(end_pipe.start_direction)[0],
+                        end_pipe.position[1] + directions_by_name.get(end_pipe.start_direction)[1]
+                    )
+                    if pipes.get(end_next_position):
+                        return True
 
     def draw(self):
         WINDOW.blit(self.image, self.rect)
@@ -81,18 +90,16 @@ class StartPipe:
                 pipes.clear()
 
                 self.change_position(position)
-                
-    def update(self):
-        pass
     
     def draw(self):
         WINDOW.blit(self.image, self.rect)
 
     def change_position(self, position):
-        grid.pop(self.position)
+        if grid.get(self.position):
+            grid.pop(self.position)
         self.position = position
         grid[self.position] = self
-        self.rect.topleft = toWorldPoint(position)
+        self.rect.topleft = toWorldPoint(self.position)
 
 class EndPipe(StartPipe):
     def __init__(self, position, start_direction):

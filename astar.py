@@ -1,42 +1,48 @@
 from heapq import heappush, heappop
 from common import grid, directions_by_position, directions_by_name, directions_match, GRID_SIZE
-from pipe import Node, Pipe, StartPipe, EndPipe, pipes
+from pipe import Pipe, start_pipe, end_pipe, pipes
 
-def find_using_astar(start_node : StartPipe, goal_node : EndPipe):
-    pipes.clear()
-    grid[start_node.position] = start_node
-    grid[goal_node.position] = goal_node
+def find_using_astar():
+    
+    for pipe_key in list(pipes.keys()):
+        pipes.pop(pipe_key)
+        grid.pop(pipe_key)
+    
+    grid[start_pipe.position] = start_pipe
+    grid[end_pipe.position] = end_pipe
     open_list = []
     closed_set = set()
 
-    start_next_direction = directions_by_name.get(start_node.end_direction)
-    start_next_node = Pipe((start_node.position[0] + start_next_direction[0], start_node.position[1] + start_next_direction[1]))
+    start_next_direction = directions_by_name.get(start_pipe.end_direction)
+    start_next_node = Pipe((start_pipe.position[0] + start_next_direction[0], start_pipe.position[1] + start_next_direction[1]))
 
     if grid.get(start_next_node.position):
         return None
 
-    goal_next_direction = directions_by_name.get(goal_node.start_direction)
-    goal_next_node = Pipe((goal_node.position[0] + goal_next_direction[0], goal_node.position[1] + goal_next_direction[1]))
+    goal_next_direction = directions_by_name.get(end_pipe.start_direction)
+    goal_next_node = Pipe((end_pipe.position[0] + goal_next_direction[0], end_pipe.position[1] + goal_next_direction[1]))
     if grid.get(goal_next_node.position):
         return None
-    goal_next_node.end_direction = directions_match.get(goal_node.start_direction)
+    goal_next_node.end_direction = directions_match.get(end_pipe.start_direction)
 
     goal_next_node.g_cost = 0
     goal_next_node.f_cost = heuristic(goal_next_node, start_next_node)
     
     heappush(open_list, goal_next_node)
     
-    for step in range(500):
+    for step in range(5000):
+        
         current_node = heappop(open_list)
 
         closed_set.add(current_node.position)
         
         if current_node.position == start_next_node.position:
-            current_node.start_direction = directions_match.get(start_node.end_direction)
+            current_node.start_direction = directions_match.get(start_pipe.end_direction)
             return retrace_path(current_node)
         
         for neighbor in get_neighbors(current_node):
             if neighbor.position in closed_set:
+                print(step)
                 continue
             
             new_g_cost = current_node.g_cost + 1 # 1 is movement cost to neighbor
@@ -79,6 +85,8 @@ def retrace_path(current_node):
     while current_node:
         path.append(current_node)
         pipes[current_node.position] = current_node
+        grid[current_node.position] = current_node
+
 
         if current_node.parent:
             current_node.parent.start_direction = get_direction(current_node, current_node.parent)

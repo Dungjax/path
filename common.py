@@ -8,7 +8,7 @@ WINDOW = display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 TILE_SIZE = 50
 GRID_SIZE = 15
 
-FPS = 60
+FPS = 600
 
 directions_by_position = {
     (-1, 0) : "L",
@@ -33,7 +33,7 @@ directions_match = {
 
 grid = {}
 
-def toWorldPoint(position):
+def toLocalPoint(position):
     return (position[0] // TILE_SIZE, position[1] // TILE_SIZE)
 
 def toWorldPoint(position):

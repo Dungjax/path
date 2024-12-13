@@ -14,6 +14,9 @@ class SceneManager:
     def handle_event(self):
         if self.current_scene:
             for ev in pygame.event.get():
+                if ev.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
                 self.current_scene.handle_event(ev)
     
     def update(self):
@@ -22,6 +25,7 @@ class SceneManager:
 
             if result:
                 self.current_scene = self.scenes[result]
+                self.current_scene.initialize()
 
     def render(self):
         if self.current_scene:

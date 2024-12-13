@@ -1,8 +1,13 @@
 from pygame import mouse
 from common import TILE_SIZE, GRID_SIZE, grid, directions_match, directions_by_name
 from pipe import Pipe, pipes
-from wall import Wall
+from wall import Wall, walls
 from astar import find_using_astar
+
+def handle_reset():
+    pipes.clear()
+    walls.clear()
+    grid.clear()
 
 def handle_play(start_pipe):
     if len(pipes):
@@ -15,11 +20,10 @@ def handle_play(start_pipe):
             if start_pipe.end_direction == directions_match.get(next_pipe.start_direction):
                 next_pipe.isAnimate = True
 
-def handle_find(start_node, goal_node):
-    find_using_astar(start_node, goal_node)
+def handle_find():
+    find_using_astar()
 
 def handle_wall():
-    pipes.clear()
     mouse_position = mouse.get_pos()
 
     position = (mouse_position[0] // TILE_SIZE, mouse_position[1] // TILE_SIZE)
@@ -33,8 +37,8 @@ def handle_wall():
             grid[position] = wall
 
         elif instance.__class__ == Wall:
-            instance.kill()
-            grid.pop(position)
+            walls.pop(instance.position)
+            grid.pop(instance.position)
 
 def handle_pipe(start_direction, end_direction):
     mouse_position = mouse.get_pos()
@@ -56,3 +60,4 @@ def handle_pipe(start_direction, end_direction):
 
         elif instance.__class__ == Pipe:
             pipes.pop(instance.position)
+            grid.pop(instance.position)

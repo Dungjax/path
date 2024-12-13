@@ -34,8 +34,10 @@ end_pipe_sprites = {
     "U" : load_animated_image("assets/END_T.png")
 }
 
-wall_button_image = load_alpha_image("assets/wall.png")
-play_button_image = load_alpha_image("assets/play.png")
-find_button_image = load_alpha_image("assets/find.png")
+start_game_button_image = load_image("assets/start_game.png")
+reset_button_image = load_image("assets/reset.png")
+wall_button_image = load_image("assets/wall.png")
+play_button_image = load_image("assets/play.png")
+find_button_image = load_image("assets/find.png")
 
 font = load_font(None, 30)
