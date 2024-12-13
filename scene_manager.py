@@ -10,6 +10,7 @@ class SceneManager:
     
     def set_scene(self, scene):
         self.current_scene = scene
+        self.current_scene.initialize()
     
     def handle_event(self):
         if self.current_scene:
